@@ -201,14 +201,19 @@ def sed_dir(pattern_from, pattern_to, path, whole_repo=False):
     exec(cmd, cwd=path)
 
 
-def generate_replacement_list(all_repos):
-    reps = []
-    reps_fqdn = []
+def generate_replacement_list(all_repos, short_names=False):
+    """ short_names: if false, will replace only fqdn and full names (review.opencontrail.org/Juniper/contrail-dev-env and Juniper/contrail-dev-env)
+    if true, will replace also short names (contrail-dev-env)"""
+    reps, reps_fqdn, reps_short = [], [], []
     for repo in all_repos:
         reps.append((repo.old_full_name(), repo.new_full_name()))
         reps_fqdn.append((repo.old_remote + '/' + repo.old_full_name(), cfg['new_hostname'] + '/' + repo.new_full_name()))
+        if repo.old_name != 'contrail':
+            reps_short.append((repo.old_name, repo.new_name))
     len_sorter = lambda x: len(x[0])
     sr = sorted(reps_fqdn, key=len_sorter, reverse=True) + sorted(reps, key=len_sorter, reverse=True)
+    if short_names:
+        sr += sorted(reps_short, key=len_sorter, reverse=True)
     return sr
 
 
@@ -232,7 +237,8 @@ def patch(repo, branch, repos):
         exec(['rsync', '-rv', files_path, repo_path])
     # sed patterns
     full_sed = repo.old_name in cfg['full_sed_repos']
-    for from_pattern, to_pattern in generate_replacement_list(repos):
+    short_name_sed = repo.old_name in cfg['short_name_sed_repos']
+    for from_pattern, to_pattern in generate_replacement_list(repos, short_name_sed):
         sed_dir(from_pattern, to_pattern, repo_path, full_sed)
     cmd = ['git', 'add', '-A']
     exec(cmd, cwd=repo_path)
