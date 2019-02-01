@@ -2,3 +2,5 @@
 sed -is 's/tungstenfabric-tools/tungstenfabric-tools-preview/g' files/contrail-vnc/master/default.xml
 sed -is 's/tungstenfabric\([^-]\)/tungstenfabric-preview\1/g' files/contrail-vnc/master/default.xml
 
+# dummy patch secrets in c-p-c
+python secrets_autopatch.py git/review.opencontrail.org/Juniper/contrail-project-config/zuul.d/secrets.yaml files/contrail-project-config/master/zuul.d/secrets.yaml

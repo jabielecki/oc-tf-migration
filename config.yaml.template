@@ -1,0 +1,23 @@
+clone: true
+org_suffix: '-preview'
+gitdir: ./git
+pipelines_file_path: contrail-project-config/zuul.d/pipelines.yaml
+repos_csv_file_path: ./reponames.csv
+old_hostname:
+    gerrit: 'review.opencontrail.org'
+    github: 'github.com'
+#new_hostname: 'gerrit.tungsten.io'
+new_hostname: 'github.com'
+branch_map:
+  production: master
+skip_branches:
+  Juniper/contrail-kolla-ansible:
+    - master
+full_sed_repos:
+  - contrail-dev-env
+github_login: abc
+github_password: 'abc'
+initial_commit_name: Charlie Root
+initial_commit_email: charlie@root.net
+dco_email: charlie@root.net
+remote_url_base: 'ssh://git@github.com'

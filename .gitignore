@@ -1,7 +1,11 @@
 reponames.csv
 /git
+/git2
 /venv
 config.yaml
 *.ods
 __pycache__
 id_rsa*
+initial-commit-msg.txt
+/repo_lists
+.~lock*

@@ -1,3 +1,0 @@
-Initial commit
-
-Signed-Off-By: charlie@root.org

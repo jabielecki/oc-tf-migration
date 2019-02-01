@@ -75,6 +75,9 @@ class Repo():
     def old_full_name(self):
         return '{}/{}'.format(self.old_org, self.old_name)
 
+    def old_url(self):
+        return 'https://{}/{}/{}'.format(self.old_remote, self.old_org, self.old_name)
+
     def __str__(self):
         return 'old: {}, new: {}'.format(self.old_full_name(), self.new_full_name())
 
@@ -162,7 +165,12 @@ def branch_in_repo(repo, branch):
 
 
 def squash(repo, branch):
-    cmd = [os.getcwd() + '/squash.sh', branch]
+    context = {
+        'dco_email': cfg['dco_email'],
+        'old_url': repo.old_url()
+    }
+    write_template('initial-commit-msg.txt.j2', 'initial-commit-msg.txt', context)
+    cmd = [os.getcwd() + '/squash.sh', branch, cfg['initial_commit_name'], cfg['initial_commit_email']]
     exec(cmd, get_old_repo_path(repo))
 
 
@@ -243,7 +251,7 @@ def patch_all(repos, active_branches, all_repos):
 
 
 def push(repo, branches, dry_run=True):
-    remote_url_base = 'ssh://git@github.com'
+    remote_url_base = cfg['remote_url_base']
     remote_url = '{}/{}/{}'.format(remote_url_base, repo.new_org, repo.new_name)
     path = get_old_repo_path(repo)
     cmd = ['git', 'remote', 'add', 'new', remote_url]

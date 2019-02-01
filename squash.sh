@@ -7,6 +7,7 @@ git for-each-ref --format='delete %(refname)' refs/replace | git update-ref --st
 git checkout -f "origin/$branch"
 git branch -D "$branch"
 git checkout --orphan "$branch"
-git add .
+git config user.name "$2"
+git config user.email "$3"
 git commit -F $mydir/initial-commit-msg.txt
 git replace "$branch" "origin/$branch"
