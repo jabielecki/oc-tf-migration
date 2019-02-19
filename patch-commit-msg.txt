@@ -1,0 +1,7 @@
+Patch sources to work with TF locations
+
+This commit introduces changes that adjust the code to work
+with Tungsten Fabric paths: repository renames, Gerrit hostname,
+.gitreview file etc.
+
+Signed-Off-By: jlukow@juniper.net

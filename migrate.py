@@ -78,6 +78,12 @@ class Repo():
     def old_url(self):
         return 'https://{}/{}/{}'.format(self.old_remote, self.old_org, self.old_name)
 
+    def path(self):
+        gitdir = pathlib.Path(cfg['gitdir'])
+        old_dir = gitdir / self.old_remote
+        repo_path = old_dir / self.old_org / self.old_name
+        return str(repo_path)
+
     def __str__(self):
         return 'old: {}, new: {}'.format(self.old_full_name(), self.new_full_name())
 
@@ -196,7 +202,7 @@ def sed_dir(pattern_from, pattern_to, path, whole_repo=False):
     else:
         paths = ['./playbooks/*', './roles/*', './zuul.d/*', './zuul/*', './zuul.yaml', './.zuul.yaml']
     paths_exp = ' -o '.join(['-path "' + p + '"' for p in paths])
-    cmd = ['bash', '-c', 'find . -not -path \'*/\.git*\' -type f \( ' + paths_exp + ' \) -print0 | xargs -0 -n1 -r sed -i -s \'s:{}:{}:g\''.format(pattern_from, pattern_to)]
+    cmd = ['bash', '-c', 'find . -not -path \'*/\.git*\' -type f \( ' + paths_exp + ' \) -print0 | xargs -0 -r sed -i -s \'s:{}:{}:g\''.format(pattern_from, pattern_to)]
     print(cmd)
     exec(cmd, cwd=path)
 
@@ -240,9 +246,16 @@ def patch(repo, branch, repos):
     short_name_sed = repo.old_name in cfg['short_name_sed_repos']
     for from_pattern, to_pattern in generate_replacement_list(repos, short_name_sed):
         sed_dir(from_pattern, to_pattern, repo_path, full_sed)
+    # gitreview
+    context = {
+        'project_name': repo.new_full_name(),
+        'branch': branch,
+        'gerrit_host': cfg['new_hostname']
+    }
+    write_template('gitreview.j2', repo.path() + '/.gitreview', context)
     cmd = ['git', 'add', '-A']
     exec(cmd, cwd=repo_path)
-    cmd = ['git', 'commit', '-m', '.']
+    cmd = ['git', 'commit', '-F', os.getcwd() + '/patch-commit-msg.txt']
     try:
         exec(cmd, cwd=repo_path)
     except Exception:
