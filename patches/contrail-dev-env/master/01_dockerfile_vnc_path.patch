@@ -10,4 +10,4 @@ index 1b92dfb..9afdf1d 100644
 +&&  repo init --no-clone-bundle -q -u https://github.com/tungstenfabric-preview/vnc -b $BRANCH \
  &&  repo sync --no-clone-bundle -q contrail-packages contrail-third-party \
  &&  make -f tools/packages/Makefile dep \
- &&  python third_party/fetch_packages.py \
+ &&  ./third_party/fetch_packages.py \
