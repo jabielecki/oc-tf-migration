@@ -1,4 +1,10 @@
 #!/bin/bash
+#
+# The legal Linux Foundation (LF) requirement is to squash the entire history into a single huge commit and
+# include the person who signs off the change of code ownership.
+# But LF agreed to use `git replace` method to allow devs to easily browse the actual history.
+# The `git replace` can be quite easily deleted and then restored.
+#
 set -x
 mydir=$(dirname "$0")
 branch=${1:-master}
