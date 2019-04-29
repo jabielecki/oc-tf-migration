@@ -10,7 +10,8 @@ mydir=$(dirname "$0")
 branch=${1:-master}
 # remove replacements from previous runs
 git for-each-ref --format='delete %(refname)' refs/replace | git update-ref --stdin
-git checkout -f "origin/$branch"
+# checkout is without that cumbersome warning about detached HEAD
+git checkout -f "origin/$branch" --detach
 git branch -D "$branch"
 git checkout --orphan "$branch"
 git config user.name "$2"
