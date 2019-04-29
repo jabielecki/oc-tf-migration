@@ -158,14 +158,13 @@ def get_old_repo_path(repo):
 def get_git_repo(repo):
     path = get_old_repo_path(repo)
     print(path)
-    return  pygit2.Repository(path)
+    return pygit2.Repository(path)
 
 
 def branch_in_repo(repo, branch):
     path = get_old_repo_path(repo)
     print(path)
     r = pygit2.Repository(path)
-    refs = list(r.references)
     result = 'refs/remotes/origin/' + branch in r.references
     return result
 
