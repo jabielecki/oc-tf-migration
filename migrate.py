@@ -134,9 +134,9 @@ def clone_repos(repos, remove=False):
                 shutil.rmtree(str(repo_path))
             except FileNotFoundError:
                 pass
-        try:
+        if os.path.isdir(str(repo_path) + '/.git'):
             exec(['git', '-C', str(repo_path), 'fetch', '--all'])
-        except subprocess.CalledProcessError:
+        else:
             exec(['git', 'clone', old_url + '/' + repo.old_full_name(), repo.old_full_name()], old_dir)
 
 
