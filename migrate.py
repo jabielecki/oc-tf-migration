@@ -271,6 +271,7 @@ def patch_all(repos, active_branches, all_repos):
 
 
 def push(repo, branches, dry_run=True):
+    path = get_old_repo_path(repo)
     cmd = ['git', 'remote', 'remove', 'new']
     print(cmd)
     try:
@@ -279,7 +280,6 @@ def push(repo, branches, dry_run=True):
         print('Remote "new" does not exist? Creating:')
     remote_url_base = cfg['remote_url_base']
     remote_url = '{}/{}/{}'.format(remote_url_base, repo.new_org, repo.new_name)
-    path = get_old_repo_path(repo)
     cmd = ['git', 'remote', 'add', 'new', remote_url]
     print(cmd)
     exec(cmd, cwd=path)
