@@ -271,16 +271,18 @@ def patch_all(repos, active_branches, all_repos):
 
 
 def push(repo, branches, dry_run=True):
+    cmd = ['git', 'remote', 'remove', 'new']
+    print(cmd)
+    try:
+        exec(cmd, cwd=path)
+    except subprocess.CalledProcessError:
+        print('Remote "new" does not exist? Creating:')
     remote_url_base = cfg['remote_url_base']
     remote_url = '{}/{}/{}'.format(remote_url_base, repo.new_org, repo.new_name)
     path = get_old_repo_path(repo)
     cmd = ['git', 'remote', 'add', 'new', remote_url]
     print(cmd)
-    if not dry_run:
-        try:
-            exec(cmd, cwd=path)
-        except subprocess.CalledProcessError:
-            print('Remote already exists?')
+    exec(cmd, cwd=path)
     for branch in branches:
         if is_branch_migrated(repo, branch):
             cmd = ['git', 'push', 'new', branch]
