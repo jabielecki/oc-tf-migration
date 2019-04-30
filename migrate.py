@@ -256,11 +256,12 @@ def patch(repo, branch, repos):
     write_template('gitreview.j2', repo.path() + '/.gitreview', context)
     cmd = ['git', 'add', '-A']
     exec(cmd, cwd=repo_path)
-    cmd = ['git', 'commit', '-F', os.getcwd() + '/patch-commit-msg.txt']
-    try:
-        exec(cmd, cwd=repo_path)
-    except Exception:
-        print('No changes?')
+    cmd = ['git', 'commit', '--allow-empty', '-F', os.getcwd() + '/patch-commit-msg.txt']
+    exec(cmd, cwd=repo_path)
+
+
+
+
 
 
 def patch_all(repos, active_branches, all_repos):
