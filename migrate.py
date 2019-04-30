@@ -286,11 +286,12 @@ def push(repo, branches, dry_run=True):
     for branch in branches:
         if is_branch_migrated(repo, branch):
             cmd = ['git', 'push', 'new', branch]
-            cmd2 = ['git', 'push', 'new', 'refs/replace/*:refs/replace/*']
             print(cmd)
-            print(cmd2)
             if not dry_run:
                 exec(cmd, cwd=path)
+            cmd2 = ['git', 'push', 'new', 'refs/replace/*:refs/replace/*']
+            print(cmd2)
+            if not dry_run:
                 exec(cmd2, cwd=path)
 
 
