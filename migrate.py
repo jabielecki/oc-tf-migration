@@ -11,7 +11,6 @@ import shutil
 import glob
 from jinja2 import Template
 
-
 cfg = {}
 extra_env = {'GIT_SSH_COMMAND': 'ssh -i {}/id_rsa -o IdentitiesOnly=yes'.format(os.getcwd())}
 
@@ -201,7 +200,9 @@ def sed_dir(pattern_from, pattern_to, path, whole_repo=False):
     else:
         paths = ['./playbooks/*', './roles/*', './zuul.d/*', './zuul/*', './zuul.yaml', './.zuul.yaml']
     paths_exp = ' -o '.join(['-path "' + p + '"' for p in paths])
-    cmd = ['bash', '-c', 'find . -not -path \'*/\.git*\' -type f \( ' + paths_exp + ' \) -print0 | xargs -0 -r sed -i -s \'s:{}:{}:g\''.format(pattern_from, pattern_to)]
+    cmd = ['bash', '-c',
+           'find . -not -path \'*/\.git*\' -type f \( ' + paths_exp + ' \) -print0 | xargs -0 -r sed -i -s \'s:{}:{}:g\''.format(
+               pattern_from, pattern_to)]
     print(cmd)
     exec(cmd, cwd=path)
 
@@ -212,7 +213,8 @@ def generate_replacement_list(all_repos, short_names=False):
     reps, reps_fqdn, reps_short = [], [], []
     for repo in all_repos:
         reps.append((repo.old_full_name(), repo.new_full_name()))
-        reps_fqdn.append((repo.old_remote + '/' + repo.old_full_name(), cfg['new_hostname'] + '/' + repo.new_full_name()))
+        reps_fqdn.append(
+            (repo.old_remote + '/' + repo.old_full_name(), cfg['new_hostname'] + '/' + repo.new_full_name()))
         if repo.old_name != 'contrail':
             reps_short.append((repo.old_name, repo.new_name))
     len_sorter = lambda x: len(x[0])
@@ -309,9 +311,9 @@ def main():
     if args.single_repo:
         obj = filter_repos(obj, [args.single_repo])
         print('Repos after filtering:', obj)
-    #for r in obj:
+    # for r in obj:
     #    print(r.old_full_name())
-    #sys.exit(0)
+    # sys.exit(0)
     # 2. Load active branches from Zuul config
     active_branches = get_active_branches()
     print('Active branches:', active_branches)
@@ -320,9 +322,9 @@ def main():
         clone_repos(obj, remove=args.full_reclone)
     # 4. Squash history
     squash_all(obj, active_branches)
-    #repos_fqdn = [(cfg['old_hostname'] + '/' + r[0], cfg['new_hostname'] + '/' + r[1]) for r in repos]
-    #github_repos_fqdn = [('github.com/' + r[0], cfg['new_hostname'] + '/' + r[1]) for r in github_repos]
-    #sr = sorted(repos + github_repos + repos_fqdn + github_repos_fqdn, key=lambda x: len(x[0]), reverse=True)
+    # repos_fqdn = [(cfg['old_hostname'] + '/' + r[0], cfg['new_hostname'] + '/' + r[1]) for r in repos]
+    # github_repos_fqdn = [('github.com/' + r[0], cfg['new_hostname'] + '/' + r[1]) for r in github_repos]
+    # sr = sorted(repos + github_repos + repos_fqdn + github_repos_fqdn, key=lambda x: len(x[0]), reverse=True)
     # 5. Apply patches
     patch_all(obj, active_branches, all_repos)
     # Push
