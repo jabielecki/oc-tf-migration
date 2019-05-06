@@ -245,8 +245,9 @@ def patch(repo, branch, repos):
     # sed patterns
     full_sed = repo.old_name in cfg['full_sed_repos']
     short_name_sed = repo.old_name in cfg['short_name_sed_repos']
+    word_boundary = '\\b'
     for from_pattern, to_pattern in generate_replacement_list(repos, short_name_sed):
-        sed_dir(from_pattern, to_pattern, repo_path, full_sed)
+        sed_dir(from_pattern + word_boundary, to_pattern, repo_path, full_sed)
     # gitreview
     context = {
         'project_name': repo.new_full_name(),
