@@ -30,9 +30,9 @@ def delete_repos(repos=None, dry_run=True):
     if repos is not None:
         full_names = [r.new_full_name() for r in repos]
     for org in orgs:
-        print('DELETING repos for org:', org, 'DRY_RUN' if dry_run else '')
+        print('Searching repos inside org:', org)
         org = gh.organization(org)
-        for repo in org.repositories(): # TODO find a way to delete repos without iterating over all repos from org
+        for repo in org.repositories():  # TODO find a way to delete repos without iterating over all repos from org
             if repos is not None:
                 if repo.full_name not in full_names:
                     continue
