@@ -3,8 +3,8 @@ import sys
 
 to_delete = ['Juniper/contrail-puppet', 'Juniper/contrail-horizon', 'Juniper/contrail-docker', 'Juniper/contrail-server-manager', 'Juniper/puppet-contrail', 'Juniper/contrail-community-docs']
 
-with open(sys.argv[1], 'r') as secrets_file:
-    projects = yaml.load(secrets_file)
+with open(sys.argv[1], 'r') as input_file:
+    projects = yaml.load(input_file)
 
 idx_delete = []
 
