@@ -11,8 +11,9 @@ new_hostname: 'github.com'
 branch_map:
   production: master
 skip_branches:
-  Juniper/contrail-kolla-ansible:
-    - master
+   # cannot "skip because repository is empty" here - zuul says  "Project kolla-ansible does not have the default branch master" and fails to checkout the expected existing branch `contrail/ocata`
+#   Juniper/contrail-kolla-ansible:
+#     - master
 full_sed_repos:
   - contrail-dev-env
 short_name_sed_repos:
