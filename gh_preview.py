@@ -7,6 +7,7 @@ import time
 migrate.read_config()
 cfg = migrate.cfg
 
+# Be warned: *all* the repos will be removed from these github organizations
 orgs = ['tungstenfabric-preview', 'tungstenfabric-tools-preview', 'tungstenfabric-infra-preview']
 gh = github3.login(cfg['github_login'], password=cfg['github_password'])
 
