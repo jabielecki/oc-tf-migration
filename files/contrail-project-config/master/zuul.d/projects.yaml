@@ -21,10 +21,14 @@
           dependencies: [contrail-vnc-build-package-centos74]
       - contrail-build-containers-centos7-queens:
           dependencies: [contrail-vnc-build-package-centos74]
+      - contrail-build-containers-centos7-rocky:
+          dependencies: [contrail-vnc-build-package-centos74]
       - contrail-sanity-centos7-kolla-ocata:
           dependencies: [contrail-build-test-containers, contrail-build-containers-centos7-ocata]
       - contrail-sanity-centos7-kolla-queens:
           dependencies: [contrail-build-test-containers, contrail-build-containers-centos7-queens]
+      - contrail-sanity-centos7-kolla-rocky:
+          dependencies: [contrail-build-test-containers, contrail-build-containers-centos7-rocky]
       - contrail-sanity-centos7-k8s:
           dependencies: [contrail-build-test-containers, contrail-build-containers-centos7-queens]
     experimental-sanity:
@@ -78,11 +82,6 @@
           dependencies: [contrail-vnc-build-package-rhel7-queens]
       - contrail-build-test-containers:
           dependencies: [contrail-vnc-build-package-rhel7-queens]
-      - contrail-deploy-rhel7-openshift-3.9:
-          dependencies: [contrail-build-containers-rhel7-queens, contrail-build-test-containers]
-      - contrail-sanity-rhel7-openshift-3.9:
-          dependencies: [contrail-build-containers-rhel7-queens, contrail-build-test-containers]
-          voting: false
     experimental-sanity:
       jobs:
       - contrail-sanity-rhel7-openshift-3.9:
@@ -118,74 +117,29 @@
     name: noops
 - project-template:
     check:
-      jobs:
-      - contrail-sanity-win2016: {voting: false}
+      jobs: [contrail-build-win2016]
+    gate:
+      jobs: [contrail-build-win2016]
+    name: windows-sanity
+- project-template:
+    check:
+      jobs: [contrail-alltests-win2016]
     gate:
       jobs: [noop]
-      queue: contrail-vnc
-    name: windows-sanity
+    name: windows-all-tests
 - project:
     check:
       jobs:
       - contrail-vnc-specs-linter:
           files: [specs/.*]
     name: Juniper/contrail-analytics
-    periodic-nightly:
-      jobs:
-      - build-variables-init
-      - contrail-build-vro-plugin:
-          dependencies: [build-variables-init]
-          vars: {release_type: nightly}
-          voting: false
-      - contrail-go-docker:
-          dependencies: [build-variables-init]
-          vars: {release_type: nightly}
-      - contrail-vnc-build-package-centos74:
-          dependencies: [build-variables-init]
-          vars: {release_type: nightly}
-      - contrail-vnc-build-package-rhel7-queens:
-          dependencies: [build-variables-init]
-          vars: {release_type: nightly}
-      - contrail-build-test-containers:
-          dependencies: [contrail-vnc-build-package-centos74]
-          vars: {release_type: nightly}
-      - contrail-build-containers-centos7-newton:
-          dependencies: [contrail-vnc-build-package-centos74]
-          vars: {release_type: nightly}
-      - contrail-build-containers-centos7-ocata:
-          dependencies: [contrail-vnc-build-package-centos74]
-          vars: {release_type: nightly}
-      - contrail-build-containers-centos7-queens:
-          dependencies: [contrail-vnc-build-package-centos74]
-          vars: {release_type: nightly}
-      - contrail-build-containers-rhel7-queens:
-          dependencies: [contrail-vnc-build-package-rhel7-queens]
-          vars: {release_type: nightly}
-      - contrail-vnc-publish-containers-nightly:
-          dependencies: [contrail-build-containers-centos7-newton, contrail-build-containers-centos7-ocata,
-            contrail-build-containers-centos7-queens, contrail-build-containers-rhel7-queens,
-            contrail-build-test-containers, contrail-go-docker]
-          vars: {release_type: nightly}
-      - generate-build-change-info:
-          dependencies: [contrail-vnc-publish-containers-nightly]
-          vars: {release_type: nightly}
-          voting: false
-      - publish-dev-env:
-          dependencies: [build-variables-init]
-          vars: {release_type: nightly}
-          voting: false
-      - create-windows-containers:
-          branches: master
-          dependencies: [build-variables-init]
-          vars: {release_type: nightly}
-          voting: false
     templates: [unittests, systests]
 - project:
     name: Juniper/contrail-common
     templates: [unittests, systests, windows-sanity]
 - project:
     name: Juniper/contrail-build
-    templates: [unittests, systests]
+    templates: [unittests, systests, windows-sanity]
 - project:
     check:
       jobs:
@@ -193,8 +147,6 @@
     name: Juniper/contrail-controller
     templates: [unittests, systests, windows-sanity]
 - project:
-    check:
-      jobs: [linters-go]
     name: Juniper/contrail-generateDS
     templates: [unittests, systests]
 - project:
@@ -259,6 +211,8 @@
 - project:
     check:
       jobs: [zuul-jobs-linters]
+    experimental:
+      jobs: [generate-build-change-info]
     gate:
       jobs: [zuul-jobs-linters]
       queue: contrail-ci
@@ -325,8 +279,6 @@
     name: Juniper/contrail-vnc
     templates: [build]
 - project:
-    check:
-      jobs: [linters-go]
     name: Juniper/contrail-api-client
     templates: [unittests, systests, windows-sanity]
 - project:
@@ -375,20 +327,28 @@
     templates: [openshift-systests]
 - project:
     name: Juniper/contrail-windows-docker-driver
-    templates: [noops]
+    templates: [windows-sanity]
 - project:
     name: Juniper/contrail-vcenter-manager
     templates: [build-container]
 - project:
     name: Juniper/contrail-windows
+    templates: [windows-sanity]
+- project:
+    name: Juniper/contrail-windows-test
+    templates: [windows-all-tests]
+- project:
+    name: Juniper/contrail-windows-ci-infra
     templates: [noops]
 - project:
     name: tungstenfabric/docs
     templates: [noops]
 - project:
     check:
-      jobs: [contrail-vnc-unittest-centos7-tntestr]
+      jobs:
+      - contrail-vnc-unittest-centos7-tntestr: {voting: false}
     name: tungstenfabric/tungsten-test-runner
+    templates: [noops]
 - project:
     name: Juniper/contrail-tripleo-puppet
     templates: [noops]
@@ -396,9 +356,8 @@
     name: Juniper/contrail-tripleo-heat-templates
     templates: [noops]
 - project:
-    check:
-      jobs: [linters-go]
     name: Juniper/contrail-go-api
+    templates: [noops]
 - project:
     name: Juniper/contrail-infra
     templates: [noops]
