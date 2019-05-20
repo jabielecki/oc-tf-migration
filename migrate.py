@@ -179,7 +179,7 @@ def squash(repo, branch):
 
 
 def is_branch_migrated(repo, branch):
-    skipped = branch in cfg['skip_branches'].get(repo.old_full_name(), [])
+    skipped = cfg['skip_branches'] is not None and branch in cfg['skip_branches'].get(repo.old_full_name(), [])
     inrepo = branch_in_repo(repo, branch)
     return inrepo and not skipped
 
