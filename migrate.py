@@ -213,8 +213,15 @@ def generate_replacement_list(all_repos, short_names=False):
     reps, reps_fqdn, reps_short = [], [], []
     for repo in all_repos:
         reps.append((repo.old_full_name(), repo.new_full_name()))
-        reps_fqdn.append(
-            (repo.old_remote + '/' + repo.old_full_name(), cfg['new_hostname'] + '/' + repo.new_full_name()))
+        # the selectattr is a commonly used idiom in zuul, it's a replacement of short repo name but a safe one
+        reps.append((
+            '\\(zuul\\W*projects\\W*selectattr\\W*short_name\\W*equalto\\W*\\)' + repo.old_name + '\\(\\W\\)',
+            '\\1'+repo.new_name+'\\2'
+        ))
+        reps_fqdn.append((
+            repo.old_remote + '/' + repo.old_full_name(),
+            cfg['new_hostname'] + '/' + repo.new_full_name()
+        ))
         if repo.old_name != 'contrail':
             reps_short.append((repo.old_name, repo.new_name))
     len_sorter = lambda x: len(x[0])
