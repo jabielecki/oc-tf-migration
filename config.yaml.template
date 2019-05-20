@@ -16,6 +16,9 @@ skip_branches:
 #     - master
 full_sed_repos:
   - contrail-dev-env
+  - contrail
+  - contrail-go-api
+  - contrail-windows-docker-driver
 short_name_sed_repos:
   - contrail-dev-env
 github_login: abc
