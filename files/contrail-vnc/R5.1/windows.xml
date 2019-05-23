@@ -1,0 +1,18 @@
+<manifest>
+  <remote name="tungstenfabric-preview" fetch="https://github.com/tungstenfabric-preview"/>
+  <remote name="tungstenfabric-tools-preview" fetch="https://github.com/tungstenfabric-tools-preview"/>
+  <default revision="refs/heads/master" remote="github"/>
+
+  <project name="build" remote="tungstenfabric-tools-preview" path="tools/build">
+    <copyfile src="SConstruct" dest="SConstruct"/>
+  </project>
+  <project name="controller" remote="tungstenfabric-preview" path="controller"/>
+  <project name="vrouter" remote="tungstenfabric-preview" path="vrouter"/>
+  <project name="third-party" remote="tungstenfabric-tools-preview" path="third_party"/>
+  <project name="common" remote="tungstenfabric-preview" path="src/contrail-common"/>
+  <project name="api-client" remote="tungstenfabric-preview" path="src/contrail-api-client"/>
+
+  <project name="windows" remote="tungstenfabric-preview" path="windows"/>
+  <project name="windows-docker-driver" remote="tungstenfabric-preview" path="src/github.com/Juniper/contrail-windows-docker-driver"/>
+  <project name="windows-test" remote="tungstenfabric-preview" path="Test"/>
+</manifest>
