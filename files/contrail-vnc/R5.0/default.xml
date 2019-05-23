@@ -2,7 +2,7 @@
 <remote name="tungstenfabric-preview" fetch="https://github.com/tungstenfabric-preview"/>
 <remote name="tungstenfabric-tools-preview" fetch="https://github.com/tungstenfabric-tools-preview"/>
 
-<default revision="refs/heads/master" remote="github"/>
+<default revision="refs/heads/master" remote="tungstenfabric-preview"/>
 
 <project name="build" remote="tungstenfabric-tools-preview" revision="R5.0" path="tools/build">
   <copyfile src="SConstruct" dest="SConstruct"/>
