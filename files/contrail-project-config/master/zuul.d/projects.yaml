@@ -361,3 +361,9 @@
 - project:
     name: Juniper/contrail-infra
     templates: [noops]
+- project:
+    name: tungstenfabric/contrail-ci-test
+              # There is a problem with triggering changes from github, so we need just one repo from any Gerrit.
+              # There is a problem with triggering changes from empty gerrit repo, and this one isn't empty.
+              # It's only use is to actually trigger CI builds with dummy commits. It is otherwise not built in CI in any way.
+    templates: [systests]
