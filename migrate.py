@@ -6,9 +6,9 @@ import subprocess
 import yaml
 import pathlib
 import pygit2
-import jinja2
 import shutil
 import glob
+import time
 from jinja2 import Template
 
 cfg = {}
@@ -268,10 +268,6 @@ def patch(repo, branch, repos):
     exec(cmd, cwd=repo_path)
 
 
-
-
-
-
 def patch_all(repos, active_branches, all_repos):
     for repo in repos:
         for branch in active_branches:
@@ -305,7 +301,14 @@ def push(repo, branches, dry_run=True):
 
 
 def push_all(repos, branches, dry_run=True):
+    first_iteration = True
     for repo in repos:
+
+        if not first_iteration and not dry_run:
+            print('Sleeping before the next push...')
+            time.sleep(cfg['rate_limiting_delay_seconds'])
+        first_iteration = False
+
         push(repo, branches, dry_run)
 
 
@@ -340,7 +343,7 @@ def main():
     # 5. Apply patches
     patch_all(obj, active_branches, all_repos)
     # Push
-    push_all(obj, active_branches, dry_run=dry_run)
+    push_all(obj, active_branches, dry_run)
 
 
 if __name__ == '__main__':
