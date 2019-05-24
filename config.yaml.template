@@ -10,6 +10,12 @@ old_hostname:
 new_hostname: 'github.com'
 branch_map:
   production: master
+additional_commits:    # these are added before ./files or ./patches
+  contrail-project-config:
+    - ad7479310af439cf4075ce6bd660e14d3eacac09  # https://review.opencontrail.org/51445
+  # contrail-project-config:         get rid of longish systests jobs     https://github.com/tungstenfabric-infra-preview/project-config/commit/4b0863375fd8cef1eb0270b95a507fb3f9f99d67
+  contrail-zuul-jobs:
+    - fa7e7bd8364ea5571dab1bae2bea7a5542428f9b  # https://review.opencontrail.org/51460
 skip_branches:
    # cannot "skip because repository is empty" here - zuul says  "Project kolla-ansible does not have the default branch master" and fails to checkout the expected existing branch `contrail/ocata`
 #   Juniper/contrail-kolla-ansible:

@@ -249,6 +249,14 @@ def patch(repo, branch, repos):
     if os.path.isdir(files_path):
         print('Replacing files from:', files_path)
         exec(['rsync', '-rv', files_path, repo_path])
+    # additional commits (cherry-picks)
+    if repo.old_name in cfg['additional_commits']:
+        for add_commit in cfg['additional_commits'][repo.old_name]:
+            cmd = ['git', 'fetch', 'origin', add_commit]
+            exec(cmd, cwd=repo_path)
+            print('git cherry-pick for branch {} commit {}'.format(branch, add_commit))
+            cmd = ['git', 'cherry-pick', '-n', add_commit]
+            exec(cmd, cwd=repo_path)
     # sed patterns
     full_sed = repo.old_name in cfg['full_sed_repos']
     short_name_sed = repo.old_name in cfg['short_name_sed_repos']
