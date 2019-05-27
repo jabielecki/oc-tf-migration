@@ -201,7 +201,8 @@ def sed_dir(pattern_from, pattern_to, path, whole_repo=False):
         paths = ['./playbooks/*', './roles/*', './zuul.d/*', './zuul/*', './zuul.yaml', './.zuul.yaml']
     paths_exp = ' -o '.join(['-path "' + p + '"' for p in paths])
     cmd = ['bash', '-c',
-           'find . -not -path \'*/\.git*\' -type f \( ' + paths_exp + ' \) -print0 | xargs -0 -r sed -i -s \'s:{}:{}:g\''.format(
+           'find . -not -path \'*/.git*\' -type f \\( ' + paths_exp
+           + ' \\) -print0 | xargs -0 -r sed -i -s \'s:{}:{}:g\''.format(
                pattern_from, pattern_to)]
     print(cmd)
     exec(cmd, cwd=path)
