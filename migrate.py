@@ -216,7 +216,7 @@ def generate_replacement_list(all_repos, short_names=False):
         reps.append((repo.old_full_name(), repo.new_full_name()))
         # the selectattr is a commonly used idiom in zuul, it's a replacement of short repo name but a safe one
         reps.append((
-            '\\(zuul\\W*projects\\W*selectattr\\W*short_name\\W*equalto\\W*\\)' + repo.old_name + '\\(\\W\\)',
+            '\\(zuul\\W*projects.*selectattr\\W*short_name.*equalto\\W*\\)' + repo.old_name + '\\([\'\\\'\'"]\\W*\\)',
             '\\1'+repo.new_name+'\\2'
         ))
         reps_fqdn.append((
