@@ -1,4 +1,3 @@
-reponames.csv
 /git
 /git2
 /venv
@@ -8,4 +7,5 @@ __pycache__
 id_rsa*
 initial-commit-msg.txt
 /repo_lists
+reponames*
 .~lock*
