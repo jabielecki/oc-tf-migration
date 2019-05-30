@@ -2,6 +2,7 @@ clone: true
 org_suffix: '-preview'
 gitdir: ./git
 pipelines_file_path: contrail-project-config/zuul.d/pipelines.yaml
+# input file (column 5 "Yes" means to pull it from gerrit, and "No" means from github)
 repos_csv_file_path: ./reponames.csv
 old_hostname:
     gerrit: 'review.opencontrail.org'
@@ -12,14 +13,14 @@ branch_map:
   production: master
 additional_commits:    # these are added before ./files or ./patches
   contrail-project-config:
-    - ad7479310af439cf4075ce6bd660e14d3eacac09  # https://review.opencontrail.org/51445
-  # contrail-project-config:         get rid of longish systests jobs     https://github.com/tungstenfabric-infra-preview/project-config/commit/4b0863375fd8cef1eb0270b95a507fb3f9f99d67
-  contrail-zuul-jobs:
-    - fa7e7bd8364ea5571dab1bae2bea7a5542428f9b  # https://review.opencontrail.org/51460
+    #- ad7479310af439cf4075ce6bd660e14d3eacac09  # https://review.opencontrail.org/51445 use full repo names in packaging-prepare-contrail
 skip_branches:
-   # cannot "skip because repository is empty" here - zuul says  "Project kolla-ansible does not have the default branch master" and fails to checkout the expected existing branch `contrail/ocata`
-#   Juniper/contrail-kolla-ansible:
-#     - master
+   # cannot skip it here, nevermind it's an empty branch - zuul says
+   #     "Project kolla-ansible does not have the default branch master"
+   # and fails to do the expected thing, that is to checkout the branch `contrail/ocata`
+   #
+   #   Juniper/contrail-kolla-ansible:
+   #     - master
 full_sed_repos:
   - contrail-dev-env
   - contrail
